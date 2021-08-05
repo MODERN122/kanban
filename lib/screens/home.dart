@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
-import 'package:likekanban/global/cards/cards.dart';
+import 'package:likekanban/blocs/auth_bloc.dart';
+import 'package:likekanban/styles/colors.dart';
+import 'package:likekanban/styles/tabbar.dart';
+import 'package:likekanban/widgets/cards.dart';
+import 'package:provider/provider.dart';
 
-import 'bloc/cards_bloc.dart';
-
-class CardsPage extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _CardsPageState createState() => _CardsPageState();
+  _HomeState createState() => _HomeState();
 }
 
-class _CardsPageState extends State<CardsPage> {
+class _HomeState extends State<Home> {
   StreamSubscription _userChangedSubscription;
 
   TabBar kanbanTabBar(Map<String, String> tabs) {
@@ -26,6 +27,12 @@ class _CardsPageState extends State<CardsPage> {
 
   @override
   void initState() {
+    var authBloc = Provider.of<AuthBloc>(context, listen: false);
+    _userChangedSubscription = authBloc.user.listen((user) {
+      if (user == null)
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (route) => false);
+    });
     super.initState();
   }
 
@@ -47,6 +54,7 @@ class _CardsPageState extends State<CardsPage> {
       length: tabPages.length,
       child: Scaffold(
         appBar: AppBar(
+          title: Text(FlutterI18n.translate(context, "textfield.login.title")),
           bottom: kanbanTabBar(tabPages),
         ),
         body: TabBarView(
