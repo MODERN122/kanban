@@ -43,7 +43,6 @@ dependencies:
 dev_dependencies:
   retrofit_generator: any
   build_runner: any  
-  toggle_switch:
   flutter_test:
     sdk: flutter
 
